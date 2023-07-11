@@ -7,32 +7,6 @@ import streamlit as st
 """
 # Edited:
 """
-import os
-os.environ["OPENAI_API_KEY"] = "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"
-
-from langchain.document_loaders import PyPDFLoader 
-from langchain.embeddings import OpenAIEmbeddings 
-from langchain.vectorstores import Chroma 
-from langchain.chains import ConversationalRetrievalChain
-from langchain.memory import ConversationBufferMemory
-from langchain.llms import OpenAI
-
-pdf_path = "./relentless.pdf"
-loader = PyPDFLoader(pdf_path)
-pages = loader.load_and_split()
-
-embeddings = OpenAIEmbeddings()
-vectordb = Chroma.from_documents(pages, embedding=embeddings, 
-                                 persist_directory=".")
-vectordb.persist()
-memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
-
-qa = ConversationalRetrievalChain.from_llm(OpenAI(temperature=0), vectordb.as_retriever(), memory=memory)
-
-query = "What is a cleaner?"
-result = qa({"question": query})
-print("answer:")
-print(result["answer"])
 
 with st.echo(code_location='below'):
     total_points = st.slider("Number of points in spiral", 1, 5000, 2000)
